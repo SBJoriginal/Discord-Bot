@@ -9,8 +9,8 @@ from statfm import handle_music_command
 load_dotenv()
 
 # Set server and channel names as variables
-SERVER_NAME = "one of us is irrelevant"
-CHANNEL_NAME = "bot_commands"
+SERVER_NAME = "Coochie World"
+CHANNEL_NAME = "general"
 
 # Set up Discord bot
 intents = discord.Intents.default()
@@ -20,7 +20,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    print(f"Bot's Application ID: {bot.user.id}")  # This will print the bot's application (user) ID
+    print(f"Bot's Application ID: {bot.user.id}")
     guild = discord.utils.get(bot.guilds, name=SERVER_NAME)
     if guild:
         print(f"Connected to the server: '{SERVER_NAME}'")
