@@ -38,15 +38,15 @@ async def get_chatgpt_response(prompt):
     print(f"Generating response for prompt: {prompt}")
 
     try:
-        # Using the newer completions.create method for OpenAI API >= 1.0.0
-        response = openai.Completion.create(
+        # Using the newer chat-based API method for GPT models (like GPT-3.5 and GPT-4)
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # or "gpt-4" if you have access
-            prompt=prompt,
+            messages=[{"role": "user", "content": prompt}],
             max_tokens=150,  # Limit tokens to keep responses short
             temperature=0.7  # Adjust temperature for more creative responses
         )
         print("Response received from OpenAI.")
-        return response.choices[0].text.strip()  # Correct access for completion response
+        return response['choices'][0]['message']['content'].strip()  # Correct access for chat-based response
     except Exception as e:
         print(f"Error during API call: {e}")
         return "Sorry, I couldn't process that request."
@@ -62,8 +62,10 @@ async def on_message(message):
     if bot.user.mentioned_in(message) or message.content.startswith("!"):
         print(f"Received message: {message.content}")
         prompt = message.content
+        context = "This is your context: My name is Spotify Bot. My duty is to answer any questions related to Coochie World, providing accurate and helpful information. When prompted, I will respond in under 150 tokens."
+        prompt_with_context = context + prompt
         try:
-            response = await get_chatgpt_response(prompt)
+            response = await get_chatgpt_response(prompt_with_context)
             await message.channel.send(response)
             print(f"Sent response: {response}")
         except Exception as e:
