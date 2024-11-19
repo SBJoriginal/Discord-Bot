@@ -2,15 +2,12 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from chatgpt import handle_chatgpt_response 
+from chatgpt import handle_chatgpt_response
 from statfm import handle_music_command
+from startup_message import opening_message
 
 # Load environment variables
 load_dotenv()
-
-# Set server and channel names as variables
-SERVER_NAME = "Coochie World"
-CHANNEL_NAME = "general"
 
 # Set up Discord bot
 intents = discord.Intents.default()
@@ -20,10 +17,22 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    print(f"Bot's Application ID: {bot.user.id}")
+    print(f'Bots Application ID: {bot.user.id}')
+
+    SERVER_NAME = os.getenv("SERVER_NAME")
+    CHANNEL_NAME = os.getenv("CHANNEL_NAME")
+    
+    # Get the guild (server) by name
     guild = discord.utils.get(bot.guilds, name=SERVER_NAME)
     if guild:
         print(f"Connected to the server: '{SERVER_NAME}'")
+        
+        # Get the channel by name
+        channel = discord.utils.get(guild.text_channels, name=CHANNEL_NAME)
+        #if channel:
+            #await opening_message(channel)  # Pass the channel to the opening_message function
+        #else:
+            #print(f"Could not find the channel with the name '{CHANNEL_NAME}'.")
     else:
         print(f"Could not find the server with the name '{SERVER_NAME}'.")
 
