@@ -3,8 +3,8 @@ This repository contains the code for a Discord bot hosted on an AWS EC2 instanc
 ## Features
 
 - **ChatGPT Integration**: The bot leverages OpenAI's GPT-3.5-turbo to respond intelligently to user queries. It can provide answers, engage in conversations, and assist users based on a defined context.
-- **Stat.fm Music Integration**: Fetches music-related data, such as a user's top tracks, and provides rich responses.
-- **Slash Commands**: Includes modern slash commands, such as `/top_tracks`, for user-friendly interactions.
+- **Stat.fm Music Integration**: Fetches music-related data, such as a user's top tracks, and provides rich responses. Not finished yet.
+- **Slash Commands**: Includes modern slash commands, such as `/top_tracks`, for user-friendly interactions. Not finished yet.
 - **Custom Startup Message**: Sends an introductory message to a specified channel upon connecting.
 - **Cloud Hosting**: Hosted on AWS EC2, ensuring continuous availability and easy remote management.
 
