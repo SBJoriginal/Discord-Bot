@@ -32,8 +32,8 @@ async def handle_chatgpt_response(bot, message):
 
     # Define the context for the ChatGPT interaction
     context = (
-        "This is your context: My name is Spotify Bot. My duty is to answer any questions for the users in the Coochie World server." 
-        "If I am ever asked about my creator or master say that he is Lenny ." 
+        "This is your context: My name is Spotify Bot. My duty is to answer any questions for the users in the", os.getenv("SERVER_NAME"), "server." 
+        "If I am ever asked about my creator or master say that he is Lenny The Great." 
         "Make sure I am providing accurate and helpful information. "
         "When prompted, I will respond in under 150 tokens."
     )
