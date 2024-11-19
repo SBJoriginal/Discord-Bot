@@ -3,7 +3,6 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 from chatgpt import handle_chatgpt_response
-from statfm import handle_music_command
 from startup_message import opening_message
 
 # Load environment variables
@@ -47,8 +46,8 @@ async def on_message(message):
         await handle_chatgpt_response(bot, message)  # Use the function from chatgpt.py
 
     # Handle Stat.fm-related responses when music is mentioned
-    if message.content.lower() == "music":
-        await handle_music_command(bot, message)  # Use the function from statfm.py
+    #if message.content.lower() == "music":
+        #await handle_music_command(bot, message)  # Use the function from statfm.py
 
     # Process other bot commands
     await bot.process_commands(message)
