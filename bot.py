@@ -2,61 +2,55 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-import random
+from chatgpt import handle_chatgpt_response
+from statfm import handle_music_command
+from startup_message import opening_message
 
 # Load environment variables
 load_dotenv()
 
-# Set up intents and bot
+# Set up Discord bot
 intents = discord.Intents.default()
+intents.messages = True
 bot = commands.Bot(command_prefix="!", intents=intents)
-
-# List of random responses the bot can send
-random_responses = [
-    "yes",
-    "no",
-    "maybe",
-    "I'm not sure",
-    "ask again later"
-]
-
-# Set your server and channel name
-SERVER_NAME = "one of us is irrelevant"
-CHANNEL_NAME = "bot_commands"
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    print(f'Bots Application ID: {bot.user.id}')
+
+    SERVER_NAME = os.getenv("SERVER_NAME")
+    CHANNEL_NAME = os.getenv("CHANNEL_NAME")
     
-    # Get the server by name
+    # Get the guild (server) by name
     guild = discord.utils.get(bot.guilds, name=SERVER_NAME)
     if guild:
-        # Get the specified text channel
-        general_channel = discord.utils.get(guild.text_channels, name=CHANNEL_NAME)
-        if general_channel:
-            await general_channel.send('Hi, I am the Spotify bot. I am back! Tag me with a question and I will answer.')
-            print(f"Message sent to '{CHANNEL_NAME}' channel in '{SERVER_NAME}'.")
-        else:
-            print(f"Error: Could not find the channel '{CHANNEL_NAME}'.")
+        print(f"Connected to the server: '{SERVER_NAME}'")
+        
+        # Get the channel by name
+        channel = discord.utils.get(guild.text_channels, name=CHANNEL_NAME)
+        #if channel:
+            #await opening_message(channel)  # Pass the channel to the opening_message function
+        #else:
+            #print(f"Could not find the channel with the name '{CHANNEL_NAME}'.")
     else:
-        print(f"Error: Could not find the server '{SERVER_NAME}'.")
+        print(f"Could not find the server with the name '{SERVER_NAME}'.")
 
-# Respond to messages with a random message from the list
 @bot.event
 async def on_message(message):
     # Prevent bot from responding to itself
     if message.author == bot.user:
         return
 
-    # Check if the message mentions the bot or starts with a command prefix
-    if bot.user.mentioned_in(message) or message.content.startswith("!"):
-        print(f"Received message: {message.content}")
+    # Handle ChatGPT-related responses when the bot is mentioned
+    if bot.user.mentioned_in(message):
+        await handle_chatgpt_response(bot, message)  # Use the function from chatgpt.py
 
-        # Respond with a random message from the list
-        await message.channel.send(random.choice(random_responses))
-        print("Sent response")
+    # Handle Stat.fm-related responses when music is mentioned
+    if message.content.lower() == "music":
+        await handle_music_command(bot, message)  # Use the function from statfm.py
 
-    # Process commands if needed
+    # Process other bot commands
     await bot.process_commands(message)
 
 # Run the bot with your Discord token

@@ -1,5 +1,3 @@
-# Discord Bot
-
 This repository contains the code for a Discord bot hosted on an AWS EC2 instance. The bot integrates with ChatGPT for conversational AI and Stat.fm for music-related commands. It is designed to run 24/7 in the cloud, providing reliable service and advanced functionality.
 
 ## Features
@@ -96,7 +94,3 @@ DISCORD_APPLICATION_ID=your_application_id
 ├── requirements.txt       # Dependencies
 ├── .env                   # Environment variables
 ```
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
