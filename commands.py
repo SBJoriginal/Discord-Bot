@@ -1,7 +1,9 @@
 import discord
 from discord import app_commands
+import os
 
 tree = None
+server_name = os.getenv("SERVER_NAME")
 
 # Music Commands
 async def setup(bot):
@@ -102,7 +104,77 @@ async def setup(bot):
 
     @tree.command(name="server_info", description="Get server statistics")
     async def server_info_command(interaction: discord.Interaction):
-        await interaction.response.send_message("Fetching server info... 📊")
+        print("Getting server info!")
+        # Ensure the command is executed in a server
+        if not interaction.guild:
+            await interaction.response.send_message("This command can only be used in a server!")
+            return
+
+        # Acknowledge the interaction first to prevent timeout
+        await interaction.response.defer(ephemeral=True)  # Acknowledge the interaction. Remove ephemeral=True so that everyone can see the message!!!!!!
+
+        # Fetch members from the guild and exclude bots
+        members = []
+        async for member in interaction.guild.fetch_members():
+            if not member.bot:  # Exclude bots
+                members.append(member)
+
+        response = f"""
+        📊 **Server Information**
+        -------------------------
+        - Server Name: {interaction.guild.name}
+        - Members ({len(members)}):
+        """
+        
+        response += "\n\nAdditional Info: Coming soon!"
+
+        # Send the response (truncate if too long)
+        await interaction.followup.send(response[:2000])  # Use followup to send the actual message
+        print ("server info sent!")
+
+
+    @tree.command(name="server_members", description="Get all members in a server")
+    async def server_members_command(interaction: discord.Interaction):
+        print("Getting member info!")
+        # Ensure the command is executed in a server
+        if not interaction.guild:
+            await interaction.response.send_message("This command can only be used in a server!")
+            return
+
+        # Acknowledge the interaction first to prevent timeout
+        await interaction.response.defer(ephemeral=True)  # Acknowledge the interaction. Remove ephemeral=True so that everyone can see the message!!!!!!
+
+        # Fetch members from the guild and exclude bots
+        members = []
+        async for member in interaction.guild.fetch_members():
+            if not member.bot:  # Exclude bots
+                members.append(member)
+
+        # Collect member names and fetch additional profile info
+        member_profiles = []
+        for member in members:
+            # Fetch member profile using their ID
+            full_member = await interaction.guild.fetch_member(member.id)
+            
+            # Prepare the profile info
+            profile_info = f"""
+            **Name**: {full_member.global_name}"""
+          # **Id**: {full_member.id} Could be added if you want or need
+
+            member_profiles.append(profile_info)
+
+        response = f"""
+        📊 **Server Members Information**
+        -------------------------
+        - Server Name: {interaction.guild.name}
+        - Members ({len(members)}):
+        """
+        response += "\n".join(member_profiles)
+        response += "\n\nAdditional Info: Coming soon!"
+
+        # Send the response (truncate if too long)
+        await interaction.followup.send(response[:2000])  # Use followup to send the actual message
+        print ("member info sent!")
 
     @tree.command(name="user_info", description="Get information about a user")
     @app_commands.describe(user="The user to fetch information for")
